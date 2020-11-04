@@ -137,7 +137,7 @@ get_phase_icons <- function(phase_data) {
 
 #' Get One Phase's Group Reward and Probability Info
 #'
-#' @param phaseData One of the three phase objects defined by calling
+#' @param phase_data One of the three phase objects defined by calling
 #'   \code{\link{getPhases}}.
 #'
 #' @importFrom rlang .data
@@ -149,9 +149,9 @@ get_phase_icons <- function(phase_data) {
 #'   \code{\link{getGroupInfo}} which combines the information for all three of
 #'   the phases.
 
-get_group_reward_probs <- function(phaseData) {
+get_group_reward_probs <- function(phase_data) {
 
-  phaseData %>%
+  phase_data %>%
     dplyr::slice(1) %>%
     dplyr::mutate(data = stringr::str_remove_all(.data$data, "Phase [1|2|3] Group \\{Reward, Probability\\}: ")) %>%
     tidyr::separate(col = .data$data,
