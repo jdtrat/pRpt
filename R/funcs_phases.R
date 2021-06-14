@@ -72,8 +72,13 @@ get_phases <- function(data) {
     dplyr::select(.data$row) %>%
     dplyr::pull(.data$row)
 
-  phase$forced <- data %>%
-    dplyr::filter(dplyr::between(.data$row, startForced, endForced - 1))
+
+  if (nrow(endForced != 0)) {
+    phase$forced <- data %>%
+      dplyr::filter(dplyr::between(.data$row, startForced, endForced - 1))
+  } else {
+    phase$forced <- NULL
+  }
 
   phase$one <- data %>%
     dplyr::filter(dplyr::between(.data$row, start1, start2 - 1)) %>%
