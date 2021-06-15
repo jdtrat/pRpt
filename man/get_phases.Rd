@@ -4,10 +4,14 @@
 \alias{get_phases}
 \title{Get Task Phases}
 \usage{
-get_phases(data)
+get_phases(data, final_icon_rating = FALSE)
 }
 \arguments{
 \item{data}{The data output from \code{\link{read_prpt}}}
+
+\item{final_icon_rating}{LOGICAL: FALSE by default for the majority of PRPT
+tasks that don't ask for final icon ratings. TRUE, and the phases will
+return those trials}
 }
 \value{
 A list of data for each phase in the PRPT task.

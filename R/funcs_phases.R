@@ -16,7 +16,11 @@ phase <- base::new.env(parent = base::emptyenv())
 #' @return A list of data for each phase in the PRPT task.
 #'
 #' @importFrom rlang .data
+#'
 #' @param data The data output from \code{\link{read_prpt}}
+#' @param final_icon_rating LOGICAL: FALSE by default for the majority of PRPT
+#'   tasks that don't ask for final icon ratings. TRUE, and the phases will
+#'   return those trials
 #'
 #' @export
 #'
@@ -28,7 +32,7 @@ phase <- base::new.env(parent = base::emptyenv())
 #' # Phase three can be accessed as follows, for example:
 #' phase_info$phaseThree
 #'
-get_phases <- function(data) {
+get_phases <- function(data, final_icon_rating = FALSE) {
 
   data <- data %>%
     dplyr::select(.data$data) %>%
@@ -59,21 +63,36 @@ get_phases <- function(data) {
     dplyr::select(.data$row) %>%
     dplyr::pull(.data$row)
 
-  end3 <- data %>%
-    dplyr::filter(stringr::str_detect(.data$data, "CLEAR TRANSITION SCREEN")) %>%
-    utils::tail(1) %>%
-    dplyr::select(.data$row) %>%
-    dplyr::pull(.data$row)
+  if (final_icon_rating) {
 
-  startFinalIcon <- end3
+    end3 <- data %>%
+      dplyr::filter(stringr::str_detect(.data$data, "CLEAR TRANSITION SCREEN")) %>%
+      utils::tail(1) %>%
+      dplyr::select(.data$row) %>%
+      dplyr::pull(.data$row)
 
-  endFinalIcon <- data %>%
-    dplyr::filter(stringr::str_detect(.data$data, "Experiment Complete:")) %>%
-    dplyr::select(.data$row) %>%
-    dplyr::pull(.data$row)
+    startFinalIcon <- end3
 
+    endFinalIcon <- data %>%
+      dplyr::filter(stringr::str_detect(.data$data, "Experiment Complete:")) %>%
+      dplyr::select(.data$row) %>%
+      dplyr::pull(.data$row)
 
-  if (nrow(endForced != 0)) {
+    phase$finalIcon <- data %>%
+      dplyr::filter(dplyr::between(.data$row, startFinalIcon, endFinalIcon - 1))
+
+  } else {
+
+    end3 <- data %>%
+      dplyr::filter(stringr::str_detect(.data$data, "Experiment Complete:")) %>%
+      utils::tail(1) %>%
+      dplyr::select(.data$row) %>%
+      dplyr::pull(.data$row)
+
+    phase$finalIcon <- NULL
+  }
+
+  if (length(endForced) != 0) {
     phase$forced <- data %>%
       dplyr::filter(dplyr::between(.data$row, startForced, endForced - 1))
   } else {
@@ -91,9 +110,6 @@ get_phases <- function(data) {
   phase$three <- data %>%
     dplyr::filter(dplyr::between(.data$row, start3, end3 - 1)) %>%
     dplyr::mutate(phase = rep(3))
-
-  phase$finalIcon <- data %>%
-    dplyr::filter(dplyr::between(.data$row, startFinalIcon, endFinalIcon - 1))
 
   return(list("forced" = phase$forced,
               "phaseOne" = phase$one,
