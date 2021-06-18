@@ -12,6 +12,9 @@
 #'
 #'
 #' @param data The data output from \code{\link{read_prpt}}
+#' @param final_icon_rating LOGICAL: FALSE by default for the majority of PRPT
+#'   tasks that don't ask for final icon ratings. TRUE, and the phases will
+#'   return those trials
 #'
 #' @return A dataframe 150 rows and 16 columns: \itemize{ \item \emph{phase:}
 #'   The phase these icons were displayed in (constant for each \code{phase}
@@ -39,9 +42,10 @@
 #'
 #' @export
 
-process_choice_data <- function(data){
+process_choice_data <- function(data, final_icon_rating = FALSE) {
 
-  get_phases(data)
+  get_phases(data, final_icon_rating = final_icon_rating)
+
   phases <- list(phase$one, phase$two, phase$three)
 
   icons <- get_icons(data)

@@ -4,10 +4,14 @@
 \alias{process_choice_data}
 \title{Process Choice Data}
 \usage{
-process_choice_data(data)
+process_choice_data(data, final_icon_rating = FALSE)
 }
 \arguments{
 \item{data}{The data output from \code{\link{read_prpt}}}
+
+\item{final_icon_rating}{LOGICAL: FALSE by default for the majority of PRPT
+tasks that don't ask for final icon ratings. TRUE, and the phases will
+return those trials}
 }
 \value{
 A dataframe 150 rows and 16 columns: \itemize{ \item \emph{phase:}

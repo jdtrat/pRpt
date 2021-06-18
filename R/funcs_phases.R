@@ -17,10 +17,7 @@ phase <- base::new.env(parent = base::emptyenv())
 #'
 #' @importFrom rlang .data
 #'
-#' @param data The data output from \code{\link{read_prpt}}
-#' @param final_icon_rating LOGICAL: FALSE by default for the majority of PRPT
-#'   tasks that don't ask for final icon ratings. TRUE, and the phases will
-#'   return those trials
+#' @inheritParams process_choice_data
 #'
 #' @export
 #'
